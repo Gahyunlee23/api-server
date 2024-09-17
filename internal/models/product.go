@@ -21,3 +21,7 @@ type Product struct {
 	QuantitiesSelection  string `json:"quantities_selection"`
 	PriceCalculationType string `json:"price_calculation_type"`
 }
+
+func (Product) TableName() string {
+	return "product"
+}

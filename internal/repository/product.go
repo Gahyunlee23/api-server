@@ -17,7 +17,7 @@ func GetProductById(id uint) (*models.Product, error) {
 
 func GetAllProducts() ([]models.Product, error) {
 	var products []models.Product
-	err := config.DB.Find(&products).Error
+	err := config.DB.Debug().Find(&products).Error
 	return products, err
 }
 
