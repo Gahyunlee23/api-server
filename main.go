@@ -1,20 +1,23 @@
 package main
 
 import (
+	"api-server/internal/config"
+	"api-server/internal/models"
 	"api-server/internal/routes"
 	"fmt"
-	"github.com/rs/cors"
 	"log"
 	"net/http"
+
+	"github.com/gorilla/handlers"
 )
 
 func main() {
-	mux := routes.InitRoutes()
+	config.ConnectDB()
 
-	handler := cors.Default().Handler(mux)
+	config.DB.AutoMigrate(&models.Product{})
+
+	router := routes.InitRoutes()
 
 	fmt.Println("Starting server on :8080")
-	if err := http.ListenAndServe(":8080", handler); err != nil {
-		log.Fatal(err)
-	}
+	log.Fatal(http.ListenAndServe(":8080", handlers.CORS()(router)))
 }

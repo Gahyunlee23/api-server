@@ -2,17 +2,19 @@ package routes
 
 import (
 	"api-server/internal/controllers"
-	"net/http"
+	_ "net/http"
+
+	"github.com/gorilla/mux"
 )
 
-func InitRoutes() *http.ServeMux {
-	mux := http.NewServeMux()
-	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Hello, World!"))
-	})
-	mux.HandleFunc("/user", controllers.GetUserHandler)
-	mux.HandleFunc("/create", controllers.PostUserHandler)
-	mux.HandleFunc("/product", controllers.GetProductHandler)
+func InitRoutes() *mux.Router {
+	router := mux.NewRouter()
 
-	return mux
+	router.HandleFunc("/products", controllers.CreateProductHandler).Methods("POST")
+	router.HandleFunc("/products", controllers.GetAllProductsHandler).Methods("GET")
+	router.HandleFunc("/products/{id:[0-9]+}", controllers.GetProductHandler).Methods("GET")
+	router.HandleFunc("/products/{id:[0-9]+}", controllers.UpdateProductHandler).Methods("PUT")
+	router.HandleFunc("/products/{id:[0-9]+}", controllers.DeleteProductHandler).Methods("DELETE")
+
+	return router
 }
